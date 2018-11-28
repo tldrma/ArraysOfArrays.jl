@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "ArraysOfArrays.jl",
     "category": "section",
-    "text": "A Julia package for efficient storage and handling of nested arrays. ArraysOfArrays provides two different types of nested arrays: ArrayOfSimilarArrays and VectorOfArrays."
+    "text": "A Julia package for efficient storage and handling of nested arrays. ArraysOfArrays provides two different types of nested arrays: ArrayOfSimilarArrays and VectorOfArrays.This package also defines and exports the following new functions applicable to nested arrays in general:nestedview and flatview switch between a flat and a nested view of the same data.\ninnersize returns the size of the elements of an array, provided they all have equal size.\ndeepgetindex, deepsetindex! and deepview provide index-based access across multiple layers of nested arrays\ninnermap and deepmap apply a function to the elements of the inner (resp. innermost) arrays.\nabstract_nestedarray_type returns the type of nested AbstractArrays for a given innermost element type with multiple layers of nesting.\nconsgroupedview computes a grouping of equal consecutive elements on a vector and applies it to another vector or (named or unnamed) tuple of vectors."
 },
 
 {
@@ -137,11 +137,67 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "api/#ArraysOfArrays.VectorOfVectors",
+    "page": "API",
+    "title": "ArraysOfArrays.VectorOfVectors",
+    "category": "type",
+    "text": "VectorOfVectors{T,...} = VectorOfArrays{T,1,...}\n\nConstructors:\n\n    VectorOfVectors{T}(A::AbstractVector{<:AbstractVector}) where {T}\n\n    VectorOfVectors(A::AbstractVector{<:AbstractVector})\n\n    VectorOfVectors(\n        data::AbstractVector, elem_ptr::AbstractVector{Int},\n        checks::Function = full_consistency_checks\n    )\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#ArraysOfArrays.abstract_nestedarray_type",
+    "page": "API",
+    "title": "ArraysOfArrays.abstract_nestedarray_type",
+    "category": "function",
+    "text": "abstract_nestedarray_type(T_inner::Type, ::Val{ndims_tuple})\n\nReturn the type of nested AbstractArrays. T_inner specifies the element type of the innermost layer of arrays, ndims_tuple specifies the dimensionality of each nesting layer (outer arrays first).\n\nIf ndims_tuple is empty, the returns is the (typically scalar) type T_inner itself.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#ArraysOfArrays.consgrouped_ptrs",
+    "page": "API",
+    "title": "ArraysOfArrays.consgrouped_ptrs",
+    "category": "function",
+    "text": "consgrouped_ptrs(A::AbstractVector)\n\nCompute an element pointer vector, suitable for creation of a VectorOfVectors that implies grouping equal consecutive entries of A.\n\nExample:\n\n    A = [1, 1, 2, 3, 3, 2, 2, 2]\n    elem_ptr = consgrouped_ptrs(A)\n    first.(VectorOfVectors(A, elem_ptr)) == [1, 2, 3, 2]\n\nconsgroupedptrs Typically, `elemptr` will be used to apply the computed grouping to other data:\n\n    B = [1, 2, 3, 4, 5, 6, 7, 8]\n    VectorOfVectors(B, elem_ptr) == [[1, 2], [3], [4, 5], [6, 7, 8]]\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#ArraysOfArrays.consgroupedview",
+    "page": "API",
+    "title": "ArraysOfArrays.consgroupedview",
+    "category": "function",
+    "text": "consgroupedview(source::AbstractVector, target)\n\nCompute a grouping of equal consecutive elements on source via consgrouped_ptrs and apply the grouping to target, resp. each element of target. target may be an vector or a named or unnamed tuple of vectors. The result is a VectorOfVectors, resp. a tuple of such.\n\nExample:\n\nA = [1, 1, 2, 3, 3, 2, 2, 2]\nB = [1, 2, 3, 4, 5, 6, 7, 8]\nconsgroupedview(A, B) == [[1, 2], [3], [4, 5], [6, 7, 8]]\n\nconsgroupedview plays well with columnar tables, too:\n\n    using Tables, TypedTables\n    data = Table(\n        a = [1, 1, 2, 3, 3, 2, 2, 2],\n        b = [1, 2, 3, 4, 5, 6, 7, 8],\n        c = [1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8]\n    )\n\n    result = Table(consgroupedview(data.a, Tables.columns(data)))\n\nwill return\n\n     a          b          c\n   ┌──────────────────────────────────────\n 1 │ [1, 1]     [1, 2]     [1.1, 2.2]\n 2 │ [2]        [3]        [3.3]\n 3 │ [3, 3]     [4, 5]     [4.4, 5.5]\n 4 │ [2, 2, 2]  [6, 7, 8]  [6.6, 7.7, 8.8]\n\nwithout copying any data:\n\n    flatview(result.a) === data.a\n    flatview(result.b) === data.b\n    flatview(result.c) === data.c\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#ArraysOfArrays.deepgetindex",
+    "page": "API",
+    "title": "ArraysOfArrays.deepgetindex",
+    "category": "function",
+    "text": "deepgetindex(A::AbstractArray, idxs...)\ndeepgetindex(A::AbstractArray{<:AbstractArray, N}, idxs...) where {N}\n\nRecursive getindex on flat or nested arrays. If A is an array of arrays, uses the first N entries in idxs on A, then the rest on the inner array(s). If A is not a nested array, deepgetindex is equivalent to getindex.\n\nSee also deepsetindex! and deepview.\n\n\n\n\n\n"
+},
+
+{
     "location": "api/#ArraysOfArrays.deepmap",
     "page": "API",
     "title": "ArraysOfArrays.deepmap",
     "category": "function",
     "text": "deepmap(f::Base.Callable, x::Any)\ndeepmap(f::Base.Callable, A::AbstractArray{<:AbstractArray{<:...}})\n\nApplies map at the deepest possible layer of nested arrays. If A is not a nested array, deepmap behaves identical to Base.map.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#ArraysOfArrays.deepsetindex!",
+    "page": "API",
+    "title": "ArraysOfArrays.deepsetindex!",
+    "category": "function",
+    "text": "deepsetindex!(A::AbstractArray, x, idxs...)\ndeepsetindex!(A::AbstractArray{<:AbstractArray,N}, x, idxs...) where {N}\n\nRecursive setindex! on flat or nested arrays. If A is an array of arrays, uses the first N entries in idxs on A, then the rest on the inner array(s). If A is not a nested array, deepsetindex! is equivalent to setindex!.\n\nSee also deepgetindex and deepview.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#ArraysOfArrays.deepview",
+    "page": "API",
+    "title": "ArraysOfArrays.deepview",
+    "category": "function",
+    "text": "deepview(A::AbstractArray, idxs...)\ndeepview(A::AbstractArray{<:AbstractArray, N}, idxs...) where {N}\n\nRecursive view on flat or nested arrays. If A is an array of arrays, uses the first N entries in idxs on A, then the rest on the inner array(s). If A is not a nested array, deepview is equivalent to view.\n\nSee also deepgetindex and deepsetindex!.\n\n\n\n\n\n"
 },
 
 {
@@ -169,19 +225,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "api/#ArraysOfArrays.innermap",
+    "page": "API",
+    "title": "ArraysOfArrays.innermap",
+    "category": "function",
+    "text": "innermap(f::Base.Callable, A::AbstractArray{<:AbstractArray})\n\nNested map at depth 2. Equivalent to map(X -> map(f, X) A).\n\n\n\n\n\n"
+},
+
+{
     "location": "api/#ArraysOfArrays.innersize",
     "page": "API",
     "title": "ArraysOfArrays.innersize",
     "category": "function",
     "text": "innersize(A:AbstractArray{<:AbstractArray}, [dim])\n\nReturns the size of the element arrays of A. Fails if the element arrays are not of equal size.\n\n\n\n\n\n"
-},
-
-{
-    "location": "api/#ArraysOfArrays.nestedmap2",
-    "page": "API",
-    "title": "ArraysOfArrays.nestedmap2",
-    "category": "function",
-    "text": "nestedmap2(f::Base.Callable, A::AbstractArray{<:AbstractArray})\n\nNested map at depth 2. Equivalent to map(X -> map(f, X) A).\n\n\n\n\n\n"
 },
 
 {
