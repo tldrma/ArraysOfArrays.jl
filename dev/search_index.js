@@ -245,7 +245,7 @@ var documenterSearchIndex = {"docs": [
     "page": "API",
     "title": "ArraysOfArrays.nestedview",
     "category": "function",
-    "text": "nestedview(A::AbstractArray{T,M+N}, M::Integer)\nnestedview(A::AbstractArray{T,2})\n\nAbstractArray{<:AbstractArray{T,M},N}\n\nView array A in as an M-dimensional array of N-dimensional arrays by wrapping it into an ArrayOfSimilarArrays.\n\n\n\n\n\n"
+    "text": "nestedview(A::AbstractArray{T,M+N}, M::Integer)\nnestedview(A::AbstractArray{T,2})\n\nAbstractArray{<:AbstractArray{T,M},N}\n\nView array A in as an M-dimensional array of N-dimensional arrays by wrapping it into an ArrayOfSimilarArrays.\n\nIt\'s also possible to use a StaticVector of length S as the type of the inner arrays via\n\nnestedview(A::AbstractArray{T}, ::Type{StaticArrays.SVector{S}})\nnestedview(A::AbstractArray{T}, ::Type{StaticArrays.SVector{S,T}})\n\n\n\n\n\n"
 },
 
 {
