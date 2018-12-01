@@ -249,6 +249,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "api/#ArraysOfArrays.element_ptr-Tuple{VectorOfArrays}",
+    "page": "API",
+    "title": "ArraysOfArrays.element_ptr",
+    "category": "method",
+    "text": "element_ptr(A::VectorOfArrays)\n\nReturns a copy of the internal element pointer vector of A.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#ArraysOfArrays.internal_element_ptr-Tuple{VectorOfArrays}",
+    "page": "API",
+    "title": "ArraysOfArrays.internal_element_ptr",
+    "category": "method",
+    "text": "internal_element_ptr(A::VectorOfArrays)\n\nReturns the internal element pointer vector of A.\n\nDo not change modify the returned vector in any way, as this would break the inner consistency of A.\n\nUse with care, see element_ptr for a safe version of this function.\n\n\n\n\n\n"
+},
+
+{
     "location": "api/#Base.sum-Union{Tuple{AbstractArrayOfSimilarArrays{T,M,1}}, Tuple{M}, Tuple{T}} where M where T",
     "page": "API",
     "title": "Base.sum",
