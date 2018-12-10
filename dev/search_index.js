@@ -133,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "API",
     "title": "ArraysOfArrays.VectorOfArrays",
     "category": "type",
-    "text": "VectorOfArrays{T,N,M} <: AbstractVector{<:AbstractArray{T,N}}\n\nAn VectorOfArrays represents a vector of N-dimensional arrays (that may differ in size). Internally, VectorOfArrays stores all elements of all arrays in a single flat vector. M must equal N - 1\n\nThe VectorOfArrays itself supports push!, unshift!, etc., but the size of each individual array in the vector is fixed. resize! can be used to shrink, but not to grow, as the size of the additional element arrays in the vector would be unknown. However, memory space for up to n arrays with a maximum size s can be reserved via sizehint!(A::VectorOfArrays, n, s::Dims{N}).\n\nConstructors:\n\nVectorOfArrays{T, N}()\n\nVectorOfArrays(\n    data::AbstractVector,\n    elem_ptr::AbstractVector{Int},\n    kernel_size::AbstractVector{<:Dims}\n    checks::Function = ArraysOfArrays.full_consistency_checks\n)\n\nOther suitable values for checks are ArraysOfArrays.simple_consistency_checks and ArraysOfArrays.no_consistency_checks.\n\nThe following type aliases are defined:\n\nVectorOfVectors{T,VT,VI,VD} = VectorOfArrays{T,1,VT,VI,VD}\n\n\n\n\n\n"
+    "text": "VectorOfArrays{T,N,M} <: AbstractVector{<:AbstractArray{T,N}}\n\nAn VectorOfArrays represents a vector of N-dimensional arrays (that may differ in size). Internally, VectorOfArrays stores all elements of all arrays in a single flat vector. M must equal N - 1\n\nThe VectorOfArrays itself supports push!, unshift!, etc., but the size of each individual array in the vector is fixed. resize! can be used to shrink, but not to grow, as the size of the additional element arrays in the vector would be unknown. However, memory space for up to n arrays with a maximum size s can be reserved via sizehint!(A::VectorOfArrays, n, s::Dims{N}).\n\nConstructors:\n\nVectorOfArrays{T,N}()\n\nVectorOfArrays(A::AbstractVector{<:AbstractArray})\nVectorOfArrays{T}(A::AbstractVector{<:AbstractArray})\nVectorOfArrays{T,N}(A::AbstractVector{<:AbstractArray})\n\nVectorOfArrays(\n    data::AbstractVector,\n    elem_ptr::AbstractVector{Int},\n    kernel_size::AbstractVector{<:Dims}\n    checks::Function = ArraysOfArrays.full_consistency_checks\n)\n\nOther suitable values for checks are ArraysOfArrays.simple_consistency_checks and ArraysOfArrays.no_consistency_checks.\n\nVectorOfVectors is defined as an type alias:\n\n`VectorOfVectors{T,VT,VI,VD} = VectorOfArrays{T,1,VT,VI,VD}`\n\n\n\n\n\n"
 },
 
 {
@@ -141,7 +141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "API",
     "title": "ArraysOfArrays.VectorOfVectors",
     "category": "type",
-    "text": "VectorOfVectors{T,...} = VectorOfArrays{T,1,...}\n\nConstructors:\n\n    VectorOfVectors{T}(A::AbstractVector{<:AbstractVector}) where {T}\n\n    VectorOfVectors(A::AbstractVector{<:AbstractVector})\n\n    VectorOfVectors(\n        data::AbstractVector, elem_ptr::AbstractVector{Int},\n        checks::Function = full_consistency_checks\n    )\n\n\n\n\n\n"
+    "text": "VectorOfVectors{T,...} = VectorOfArrays{T,1,...}\n\nConstructors:\n\nVectorOfVectors(A::AbstractVector{<:AbstractVector})\nVectorOfVectors{T}(A::AbstractVector{<:AbstractVector}) where {T}\n\nVectorOfVectors(\n    data::AbstractVector, elem_ptr::AbstractVector{Int},\n    checks::Function = full_consistency_checks\n)\n\nSee also [VectorOfArrays](@ref).\n\n\n\n\n\n"
 },
 
 {
